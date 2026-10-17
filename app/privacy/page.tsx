@@ -74,8 +74,8 @@ export default function Privacy() {
 
       <h2>Sending things</h2>
       <p>
-        The application drafts messages but does not send them. Email sending is disabled in its
-        configuration, and anything that would act on the user&rsquo;s behalf — registering for
+        The application drafts messages but does not send them. It contains no code that sends
+        email, and anything that would act on the user&rsquo;s behalf — registering for
         an event, adding a calendar entry — is shown to them for approval first.
       </p>
 

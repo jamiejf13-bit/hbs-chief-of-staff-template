@@ -34,8 +34,11 @@ Neon shows a **Connection string** panel right after the project is created (lat
 If you haven't yet, create the settings file from the example (in the project folder):
 
 ```bash
-copy .env.example .env.local
+cp .env.example .env.local
 ```
+
+(In Windows Command Prompt or PowerShell: `copy .env.example .env.local`.) Set
+`APP_PASSWORD` and `SESSION_SECRET` in it too if you haven't — see the README.
 
 Then set the value without it appearing on screen:
 

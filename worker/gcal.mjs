@@ -5,12 +5,9 @@
 // drifts. See spec §1a — neither is master, and nothing is ever deleted from
 // one because the other lacks it.
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { markSource, googleRefreshToken } from './lib.mjs';
 import { PROFILE } from './profile.mjs';
 
-const TOKEN_PATH = fileURLToPath(new URL('./.credentials/google-token.json', import.meta.url));
 const CAL = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
 
 let cachedToken = null;

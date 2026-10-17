@@ -12,7 +12,6 @@
 
 import { loadEnv, db, log, recordRun, heartbeat } from './lib.mjs';
 import { syncCanvas } from './canvas.mjs';
-import { syncGmail } from './gmail.mjs';
 import { syncOutlook } from './outlook.mjs';
 import { reconcileCalendars } from './reconcile.mjs';
 import { syncGoogleCalendar, mirrorOutlookToGoogle } from './gcal.mjs';

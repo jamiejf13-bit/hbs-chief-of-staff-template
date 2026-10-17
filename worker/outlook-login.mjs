@@ -12,7 +12,7 @@
 // it knows nothing about your normal browser, which is why you must sign in
 // here once, 2FA included.
 //
-// The profile lives in worker/.sessions/outlook and is gitignored. HBS
+// The profile lives in %LOCALAPPDATA%\hbs-chief-of-staff\outlook-profile, outside the repo. HBS
 // credentials never leave this laptop (spec §8).
 
 import { chromium } from 'playwright';

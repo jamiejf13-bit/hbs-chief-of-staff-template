@@ -258,7 +258,7 @@ Single text field. Parse natural language for date and course: `"call CPD Thursd
 
 ### Email send flag
 
-Build the full send path, but ship with `EMAIL_SEND_ENABLED=false`. Drafts appear in the queue with the complete text in `preview`; approving opens the draft in the mail client rather than sending. Flip the flag once drafts are consistently right over several weeks. The cost of being wrong is an email to a recruiter that cannot be unsent.
+**Not built.** Today the console only drafts: outreach text appears for you to copy, and no code path sends email. `EMAIL_SEND_ENABLED` is reserved in `.env.example` for when a send path exists; nothing reads it yet. If you add one, gate it on that flag, default it to `false`, and leave it off until drafts have been consistently right for weeks. The cost of being wrong is an email to a recruiter that cannot be unsent.
 
 ### Queue health
 

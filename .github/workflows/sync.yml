@@ -17,7 +17,14 @@
 #   GOOGLE_CLIENT_SECRET   the same
 #   GOOGLE_REFRESH_TOKEN   refresh_token from worker/.credentials/google-token.json
 #                          (`npm run google:copy-token` puts it on the clipboard)
-#   ANTHROPIC_API_KEY      optional; lets the cloud run estimate durations
+#
+# OFF UNTIL YOU TURN IT ON. The scheduled runs skip the job unless the
+# repository variable SYNC_ENABLED is 'true' (Settings -> Secrets and
+# variables -> Actions -> Variables -> New repository variable). Without that
+# guard every fresh copy of the template would fail every twenty minutes for
+# lack of DATABASE_URL and email you each time. Add the secrets above first,
+# then the variable. "Run workflow" by hand always runs, so you can test the
+# secrets before switching the schedule on.
 #
 # KEEP THE REPOSITORY PRIVATE. lib/profile.json and lib/targets.json hold your
 # name, emails and recruiting search.
@@ -54,6 +61,7 @@ concurrency:
 
 jobs:
   sync:
+    if: vars.SYNC_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

@@ -9,8 +9,6 @@
 // path ships behind EMAIL_SEND_ENABLED and that feature does not exist yet.
 
 import { chromium } from 'playwright';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { PROFILE, clearStaleLocks } from './outlook.mjs';
 import {
   PROFILE as TT_PROFILE,
@@ -19,11 +17,10 @@ import {
   launchOptions as ttLaunchOptions,
   reauthenticate as ttReauth,
 } from './twelvetwenty-login.mjs';
-import { log, googleRefreshToken } from './lib.mjs';
+import { googleRefreshToken } from './lib.mjs';
 // Aliased: PROFILE above is the Outlook browser-profile path.
 import { PROFILE as ME } from './profile.mjs';
 
-const TOKEN_PATH = fileURLToPath(new URL('./.credentials/google-token.json', import.meta.url));
 
 /** Actions this worker knows how to carry out. Anything else is left pending
  *  rather than silently marked done. */

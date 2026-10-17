@@ -130,7 +130,7 @@ function readable(html) {
     .replace(/&#39;|&rsquo;|&lsquo;/g, '’')
     .replace(/&quot;|&ldquo;|&rdquo;/g, '"')
     .replace(/&mdash;/g, '—')
-    .replace(/[ \t ]+/g, ' ')
+    .replace(/[ \t\u00a0]+/g, ' ')
     .split('\n')
     .map((line) => line.trim())
     .join('\n')

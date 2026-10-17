@@ -47,7 +47,14 @@ sync time and the page shows a worker heartbeat. Stale data announces itself.
 Optional: `data/internships.json` + `data/keywords.json` seed the internships tracker
 (`node scripts/import-watchlist.mjs`).
 
-Keep your GitHub repository **private** — these two files describe you.
+Keep your GitHub repository **private** — these two files describe you. When you click
+**Use this template → Create a new repository**, choose **Private**; GitHub does not pick
+it for you.
+
+Optional: if you keep class-prep write-ups on disk (`02 Courses/<COURSE>/Class Material/…
+- Prep.docx`, as the daily study bot makes them), set `HBS_ROOT` in `.env.local` to the
+folder that holds `02 Courses`, and the worker attaches them to the matching class to-dos.
+Unset, that source is simply skipped.
 
 ## Build this with Claude Code
 
@@ -78,14 +85,32 @@ Then, in the project folder (**OneDrive sync paused**):
 ```bash
 npm install
 npx playwright install chromium
-copy .env.example .env.local
+cp .env.example .env.local
 ```
+
+(`cp` is for Git Bash, macOS and Linux; in Windows Command Prompt or PowerShell use
+`copy .env.example .env.local`.)
+
+Before the first `npm run dev`, set two values in `.env.local`. The page is behind a login
+even on your own laptop, so without them it redirects to `/login` and signing in fails:
+
+- `APP_PASSWORD` — the password you will type to open the console. Make it long.
+- `SESSION_SECRET` — signs the login cookie. A long random string.
+
+This prints a suitable random string; run it once per value:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Or let `node scripts/set-secret.mjs APP_PASSWORD` (and `SESSION_SECRET`) prompt for each
+without echoing it.
 
 | Step | Command / doc |
 |---|---|
 | 1. Fill in `lib/profile.json` and `lib/targets.json` | by hand, or with Claude |
 | 2. Database | [`docs/neon-setup.md`](docs/neon-setup.md), then `npm run db:push` |
-| 3. Try it locally | `npm run dev` → <http://localhost:3000> |
+| 3. Try it locally | `npm run dev` → <http://localhost:3000>, sign in with `APP_PASSWORD`. Before `DATABASE_URL` is set it shows sample data; after, your (empty) database |
 | 4. Canvas token | hbs.instructure.com → Account → Settings → New Access Token → `CANVAS_TOKEN`; check with `npm run canvas:check` |
 | 5. Google Calendar / Gmail | [`docs/google-setup.md`](docs/google-setup.md), then `npm run worker:google-auth` |
 | 6. HBS Outlook | `npm run worker:outlook-login` (sign in once in the window it opens) |
@@ -127,15 +152,21 @@ and the chat says it is not configured. To add a tool, add a definition and a ca
   risks restricting the account you are recruiting with. LinkedIn signal arrives only as
   the alert emails LinkedIn sends you (via Gmail), and "people to reach out to" are search
   links for *you* to click.
-- **Never test against your live cookie store.** `worker/.sessions/` holds your signed-in
-  Outlook and 12Twenty browser profiles. Experiments, debugging scripts and Playwright
+- **Never test against your live cookie store.** Your signed-in Outlook and 12Twenty
+  browser profiles live outside the repo, in `%LOCALAPPDATA%\hbs-chief-of-staff\`
+  (`outlook-profile`, `twelvetwenty-profile`) — outside OneDrive, because a synced
+  Chromium profile cannot hold its lock file. Experiments, debugging scripts and Playwright
   tests should use a throwaway copy or a fresh profile — a bot challenge, a corrupted
   profile or a sign-out there takes the real worker down with it.
 - **No writes back to Canvas.** Read-only, always. Ticking a mirrored task off is local.
 - **Nothing acts on your behalf without approval.** Registrations and calendar writes go
-  through the action queue; email sending ships disabled (`EMAIL_SEND_ENABLED=false`).
+  through the action queue. The console never sends email: it can draft outreach, and
+  there is no sending code at all (`EMAIL_SEND_ENABLED` in `.env.example` is reserved for
+  a future send path and does nothing today).
 - **Secrets never reach Vercel or git** except the few listed in docs/deploy.md. Browser
-  sessions and Google tokens stay under `worker/.sessions/` and `worker/.credentials/`.
+  sessions stay in `%LOCALAPPDATA%\hbs-chief-of-staff\`, the Google token in
+  `worker/.credentials/`; `worker/.sessions/` only holds diagnostic probe files. All are
+  outside git.
 - `origin` on a task is load-bearing: `mirrored` rows belong to a source system and are
   overwritten on sync; `owned` rows are yours and are never touched.
 
@@ -143,11 +174,11 @@ and the chat says it is not configured. To add a tool, add a definition and a ca
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Local web app on port 3000 (shows sample data until `DATABASE_URL` is set) |
+| `npm run dev` | Local web app on port 3000. Needs `APP_PASSWORD` and `SESSION_SECRET` in `.env.local`; shows sample data until `DATABASE_URL` is set |
 | `npm run verify` | Lint + typecheck + production build |
 | `npm run db:push` / `db:check` | Apply `db/schema.sql` (safe to re-run) / report on the database |
 | `npm run worker` | The laptop worker loop |
-| `npm run worker:once` | One pass of every source, then exit |
+| `npm run worker:once` | One pass of Canvas, Outlook and Google Calendar plus reconcile, then exit (a quick check; `npm run worker` runs everything) |
 | `npm run worker:google-auth` | Connect (or reconnect) Google |
 | `npm run worker:outlook-login` | Sign in to HBS Outlook once |
 | `npm run worker:12twenty-login` | Sign in to 12Twenty once / clear a bot check |

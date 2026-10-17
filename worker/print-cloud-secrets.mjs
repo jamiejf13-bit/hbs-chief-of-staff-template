@@ -10,7 +10,6 @@
 // when you are done, and if you ever paste one somewhere public, rotate it:
 // the Google pair in the Cloud console, Canvas under Account > Settings.
 
-import { readFileSync } from 'node:fs';
 import { loadEnv, googleRefreshToken } from './lib.mjs';
 
 const env = loadEnv();

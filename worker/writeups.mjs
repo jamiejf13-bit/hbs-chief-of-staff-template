@@ -22,11 +22,18 @@ import { log, markSource } from './lib.mjs';
 import { PROFILE, COURSE_CODES } from './profile.mjs';
 import { uploadAsGoogleDoc, DriveScopeMissing } from './drive.mjs';
 
-// Override with HBS_ROOT in .env.local if your folder lives elsewhere.
-const DEFAULT_ROOT = join(
-  process.env.USERPROFILE || homedir(),
-  'OneDrive', 'Documents', 'HBS',
-);
+/**
+ * Where your course folders live: HBS_ROOT in .env.local, e.g.
+ *   HBS_ROOT=C:\Users\<you>\OneDrive\Documents\HBS
+ * the folder that holds `02 Courses`. Unset means you don't keep prep files on
+ * disk, and the source is skipped rather than reported as broken; a set path
+ * that does not exist is a real error and says so.
+ */
+function configuredRoot(env) {
+  const raw = (env?.HBS_ROOT || process.env.HBS_ROOT || '').trim();
+  if (!raw) return '';
+  return raw.startsWith('~') ? join(homedir(), raw.slice(1)) : raw;
+}
 
 /** `FRC - Financial Reporting and Control` -> `FRC`, and only configured courses. */
 const COURSES = new Set(COURSE_CODES.map((c) => c.toUpperCase()));
@@ -156,7 +163,11 @@ function findPreps(root) {
  * several ways to be quietly wrong, and one class per course per day makes
  * course-and-date exact.
  */
-export async function syncWriteups(sql, env, did, { root = env?.HBS_ROOT || DEFAULT_ROOT } = {}) {
+export async function syncWriteups(sql, env, did, { root = configuredRoot(env) } = {}) {
+  if (!root) {
+    log('writeups: not configured (set HBS_ROOT in .env.local to attach prep files)');
+    return { ok: true, skipped: 'not configured' };
+  }
   if (!existsSync(root)) {
     const why = `Write-up folder not found: ${root}`;
     await markSource(sql, 'writeups', false, why);
