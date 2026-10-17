@@ -8,6 +8,8 @@ data** — every name, company and course ID is an example for you to replace.
 
 Single user. No accounts, no sharing, no multi-tenancy. Your copy is yours alone.
 
+![The console running on its built-in sample data: today's date, the assistant box, a week calendar of classes, and 12Twenty events in the side rail](docs/images/console.png)
+
 ## What you get
 
 | Feature | Where it comes from |
