@@ -1,0 +1,40 @@
+{
+  "name": "hbs-chief-of-staff-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "unsync": "node scripts/unsync-build.mjs",
+    "dev": "npm run unsync && next dev",
+    "build": "npm run unsync && next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "db:push": "node scripts/migrate.mjs",
+    "db:check": "node scripts/check-db.mjs",
+    "worker": "node worker/loop.mjs",
+    "worker:once": "node worker/run.mjs",
+    "worker:outlook-login": "node worker/outlook-login.mjs",
+    "worker:google-auth": "node worker/google-auth.mjs",
+    "canvas:check": "node scripts/check-canvas.mjs",
+    "worker:12twenty-login": "node worker/twelvetwenty-login.mjs",
+    "verify": "npm run unsync && eslint . && tsc --noEmit && next build",
+    "google:copy-token": "node scripts/copy-google-token.mjs",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.127.0",
+    "@neondatabase/serverless": "^0.10.4",
+    "next": "^15.1.0",
+    "playwright": "^1.63.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.71.1"
+  }
+}

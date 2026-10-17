@@ -1,0 +1,40 @@
+{
+  "lastVerified": "2026-09-01",
+  "_comment": "EXAMPLE watchlist. Replace with roles you are tracking, then run `node scripts/import-watchlist.mjs` to load them into the database. Every company and link here is fake.",
+  "roles": [
+    {
+      "id": "example-co-pm",
+      "priority": "1 - Urgent",
+      "company": "Example Co",
+      "role": "MBA Product Manager Internship",
+      "function": "Product Management",
+      "locations": "Boston, MA",
+      "nycOption": "No",
+      "status": "Open",
+      "deadline": "2026-10-15",
+      "timing": "Rolling; reviewed as applications arrive.",
+      "pay": "Not listed",
+      "notes": "Example entry. Notes on the posting go here.",
+      "link": "https://example.com/careers/mba-pm-intern",
+      "linkCheck": "Not checked",
+      "keywordsKey": "example-co-pm"
+    },
+    {
+      "id": "sample-labs-strategy",
+      "priority": "2 - Apply now",
+      "company": "Sample Labs",
+      "role": "Summer 2027 MBA Strategy Intern",
+      "function": "Strategy",
+      "locations": "New York, NY or Remote",
+      "nycOption": "Yes",
+      "status": "Open",
+      "deadline": null,
+      "timing": "Opens in October.",
+      "pay": "Not listed",
+      "notes": "Example entry.",
+      "link": "https://example.com/jobs/strategy-intern",
+      "linkCheck": "Not checked",
+      "keywordsKey": "sample-labs-strategy"
+    }
+  ]
+}

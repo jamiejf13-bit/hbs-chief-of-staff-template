@@ -1,0 +1,138 @@
+{
+  "_comment": [
+    "EXAMPLE recruiting filter. Replace every value with your own search.",
+    "The single source of truth for what you are recruiting for: read by the",
+    "worker (Gmail alerts, 12Twenty, job boards, people to reach out to) and by",
+    "the page, so the filters that rank a role and the copy that describes your",
+    "search cannot drift apart. Change it here and everything downstream follows.",
+    "functions are in priority order: the first is worth the most points."
+  ],
+  "headline": "MBA Candidate at Harvard Business School | Seeking Summer 2027 Internship in Product & Strategy",
+  "timing": "Summer 2027 internship",
+  "functions": [
+    {
+      "name": "Product Management",
+      "terms": [
+        "product management",
+        "product manager",
+        "apm"
+      ]
+    },
+    {
+      "name": "Strategy / Business Development",
+      "terms": [
+        "strategy",
+        "business development",
+        "corporate development",
+        "strategic planning"
+      ]
+    },
+    {
+      "name": "Marketing",
+      "terms": [
+        "product marketing",
+        "brand marketing",
+        "go-to-market",
+        "gtm"
+      ]
+    }
+  ],
+  "industries": [
+    {
+      "name": "Technology",
+      "terms": [
+        "technology",
+        "tech",
+        "software",
+        "saas",
+        "ai",
+        "fintech",
+        "marketplace",
+        "platform"
+      ]
+    },
+    {
+      "name": "Consumer",
+      "terms": [
+        "consumer",
+        "retail",
+        "e-commerce",
+        "ecommerce",
+        "cpg"
+      ]
+    }
+  ],
+  "locations": {
+    "primary": [
+      "boston",
+      "cambridge, ma"
+    ],
+    "secondary": [
+      "new york",
+      "nyc",
+      "san francisco",
+      "bay area",
+      "seattle"
+    ]
+  },
+  "exclude": {
+    "_comment": "Words in a title that mean 'not for me', whatever else matches.",
+    "terms": [
+      "software engineer",
+      "engineering",
+      "data scientist",
+      "research scientist",
+      "attorney",
+      "accountant"
+    ],
+    "_seniority_comment": "Roles an MBA intern cannot take.",
+    "seniority": [
+      "senior",
+      "staff",
+      "principal",
+      "director",
+      "vp",
+      "vice president",
+      "head of"
+    ],
+    "_employers_comment": "Employers, not words in a title — e.g. a whole industry you are not recruiting in. Matched against a company name with a word boundary in front and a negative lookahead behind, so \"strategy\\\\s*&\" style patterns work and \"ey\" would not match \"Eyewear\". Regex syntax is allowed.",
+    "employers": [
+      "example consulting group",
+      "example capital partners"
+    ],
+    "_sectors_comment": "Sectors you are not recruiting into, matched against employer and title together as words. A function match in the wrong sector is still the wrong role.",
+    "sectors": [
+      "hospital",
+      "biotech"
+    ]
+  },
+  "remote_is_a_target": false,
+  "_companies_comment": "Companies you are targeting. Gmail news and recruiting mail that names one ranks higher.",
+  "companies": [
+    "example co",
+    "sample labs"
+  ],
+  "_job_boards_comment": "Public job boards the worker reads twice a day (worker/jobs.mjs). kind is greenhouse or ashby; slug is the name in the board URL, e.g. boards.greenhouse.io/<slug> or jobs.ashbyhq.com/<slug>. These are examples of the format.",
+  "job_boards": [
+    {
+      "company": "Stripe",
+      "kind": "greenhouse",
+      "slug": "stripe"
+    },
+    {
+      "company": "Airbnb",
+      "kind": "greenhouse",
+      "slug": "airbnb"
+    },
+    {
+      "company": "Anthropic",
+      "kind": "greenhouse",
+      "slug": "anthropic"
+    },
+    {
+      "company": "OpenAI",
+      "kind": "ashby",
+      "slug": "openai"
+    }
+  ]
+}

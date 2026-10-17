@@ -1,0 +1,86 @@
+# The cloud half of the console's worker.
+#
+# WHY HERE AND NOT VERCEL CRON. Vercel's free plan runs a cron job once a day,
+# which is no use to a calendar. GitHub Actions runs on a schedule as often as
+# every five minutes and this repository already lives here, so the code and
+# the schedule stay in one place.
+#
+# WHAT THIS CANNOT DO. Outlook and 12Twenty need your signed-in browser and
+# the Class Log is a file on your laptop, so those stay in worker/loop.mjs on
+# the machine. Nothing here acts on your behalf — it is read-only by
+# construction. See the header of worker/cloud.mjs.
+#
+# SECRETS. Settings -> Secrets and variables -> Actions:
+#   DATABASE_URL           the Neon connection string
+#   CANVAS_TOKEN           Canvas personal access token
+#   GOOGLE_CLIENT_ID       from the Google Cloud project
+#   GOOGLE_CLIENT_SECRET   the same
+#   GOOGLE_REFRESH_TOKEN   refresh_token from worker/.credentials/google-token.json
+#                          (`npm run google:copy-token` puts it on the clipboard)
+#   ANTHROPIC_API_KEY      optional; lets the cloud run estimate durations
+#
+# KEEP THE REPOSITORY PRIVATE. lib/profile.json and lib/targets.json hold your
+# name, emails and recruiting search.
+
+name: Sync
+
+on:
+  schedule:
+    # Every 20 minutes, 6am to midnight Eastern (10:00-03:59 UTC).
+    #
+    # THE CADENCE IS SET BY BILLING, NOT BY TASTE. GitHub Free gives a private
+    # repository 2,000 CI minutes a month and bills each run at a one-minute
+    # minimum. Every fifteen minutes around the clock is 96 runs a day, about
+    # 2,880 minutes a month — over the limit around the third week, at which
+    # point the sync would simply stop, most likely without anyone noticing.
+    # This is 54 runs a day, roughly 1,620 minutes, with room for the job
+    # boards and for running the workflow by hand.
+    #
+    # Overnight is dropped rather than thinned because nothing you need
+    # changes at 3am, and the laptop covers anything that does the moment it
+    # wakes. GitHub queues scheduled runs and can be several minutes late,
+    # which a twenty-minute cadence absorbs and a one-minute one would not.
+    - cron: '*/20 10-23,0-3 * * *'
+    # The job boards read ~2,500 postings and barely move. Twice a day.
+    - cron: '10 11,23 * * *'
+  # So a failed run can be re-run by hand without waiting for the schedule.
+  workflow_dispatch:
+
+# A slow run must never overlap the next scheduled one. Two passes reading the
+# same rows is how the calendar got duplicated in the first place.
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # The worker needs @neondatabase/serverless and nothing else at runtime;
+      # Playwright's browsers are never downloaded because nothing here opens
+      # one, and skipping that saves about a minute and 300MB per run.
+      - run: npm ci --omit=optional
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+      - name: Run the cloud sources
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CANVAS_TOKEN: ${{ secrets.CANVAS_TOKEN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: |
+          if [ "${{ github.event.schedule }}" = "10 11,23 * * *" ]; then
+            node worker/cloud.mjs
+          else
+            node worker/cloud.mjs --only gcal,canvas,gmail
+          fi

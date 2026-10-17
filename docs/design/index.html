@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chief of Staff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;
+  --card:#FFFFFF;
+  --ink:#16161A;
+  --ink-2:#4A4A52;
+  --ink-3:#85858E;
+  --rule:#E3E1DB;
+  --rule-2:#EFEDE7;
+  --alert:#C42B1C;
+  --ok:#2F7D4F;
+  --warn:#9A6B00;
+
+  --mkt:#C2410C;
+  --strat:#1D4ED8;
+  --frc:#047857;
+  --tom:#6D28D9;
+  --lead:#BE185D;
+  --fin:#A16207;
+  --rec:#0F766E;
+  --adm:#5C5C66;
+
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --paper:#131316;
+    --card:#1B1B1F;
+    --ink:#F2F1EE;
+    --ink-2:#B4B3AE;
+    --ink-3:#7E7D79;
+    --rule:#2E2E34;
+    --rule-2:#26262B;
+    --alert:#FF6B5A;
+    --ok:#5FBF8A;
+    --warn:#D9A537;
+    --mkt:#F97A3D;
+    --strat:#6D9BFF;
+    --frc:#3EBE8B;
+    --tom:#A98BFF;
+    --lead:#F472A6;
+    --fin:#D8A93B;
+    --rec:#45BFB2;
+    --adm:#9A99A3;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131316; --card:#1B1B1F; --ink:#F2F1EE; --ink-2:#B4B3AE; --ink-3:#7E7D79;
+  --rule:#2E2E34; --rule-2:#26262B; --alert:#FF6B5A; --ok:#5FBF8A; --warn:#D9A537;
+  --mkt:#F97A3D; --strat:#6D9BFF; --frc:#3EBE8B; --tom:#A98BFF; --lead:#F472A6;
+  --fin:#D8A93B; --rec:#45BFB2; --adm:#9A99A3;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 72px}
+
+/* ---- top bar ---- */
+.topbar{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:14px 0 12px;border-bottom:1px solid var(--rule);
+  position:sticky;top:env(safe-area-inset-top,0px);
+  background:var(--paper);z-index:20;
+}
+.mark{
+  font-variation-settings:"wdth" 118;font-weight:700;font-size:14px;letter-spacing:-.01em;
+}
+.mark span{color:var(--ink-3);font-weight:500}
+.sample{
+  font-size:11.5px;color:var(--warn);border:1px solid currentColor;
+  padding:2px 7px;border-radius:2px;font-weight:600;
+}
+.spacer{flex:1}
+.seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.seg button{
+  font:inherit;font-size:13px;font-weight:500;border:0;background:transparent;color:var(--ink-2);
+  padding:5px 13px;cursor:pointer;
+}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button+button{border-left:1px solid var(--rule)}
+.ghost{
+  font:inherit;font-size:13px;border:1px solid var(--rule);background:transparent;color:var(--ink-2);
+  border-radius:3px;padding:5px 11px;cursor:pointer;
+}
+.ghost:hover{border-color:var(--ink-3);color:var(--ink)}
+
+/* ---- hero ---- */
+.hero{padding:30px 0 26px;border-bottom:1px solid var(--rule)}
+.date{
+  font-variation-settings:"wdth" 125;font-weight:600;
+  font-size:clamp(34px,6.4vw,62px);line-height:.95;letter-spacing:-.025em;margin:0;
+}
+.date em{font-style:normal;color:var(--ink-3)}
+.nextline{
+  margin:18px 0 0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  font-size:17px;font-weight:500;
+}
+.nextline .tick{
+  font-variation-settings:"wdth" 70;font-weight:700;font-size:15px;
+  color:var(--paper);background:var(--ink);padding:3px 9px;border-radius:2px;
+}
+.nextline .loc{color:var(--ink-3);font-weight:400;font-size:15px}
+.stats{display:flex;gap:34px;margin-top:24px;flex-wrap:wrap}
+.stat .n{font-variation-settings:"wdth" 118;font-weight:700;font-size:27px;line-height:1;letter-spacing:-.02em}
+.stat .l{font-size:12.5px;color:var(--ink-3);margin-top:5px}
+.stat.hot .n{color:var(--alert)}
+
+/* ---- layout ---- */
+.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:34px;padding-top:26px;align-items:start}
+@media (max-width:920px){.grid{grid-template-columns:1fr;gap:26px}}
+
+h2.sec{
+  font-size:13px;font-weight:700;letter-spacing:.005em;margin:0 0 12px;
+  font-variation-settings:"wdth" 108;
+  display:flex;align-items:center;gap:9px;
+}
+h2.sec .count{color:var(--ink-3);font-weight:500}
+section+section{margin-top:30px}
+
+/* ---- agent ---- */
+.agent{border:1px solid var(--rule);border-radius:4px;background:var(--card);overflow:hidden}
+.agent-head{
+  display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--rule-2);
+  font-size:13px;font-weight:600;
+}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
+.agent-head .when{color:var(--ink-3);font-weight:400;margin-left:auto;font-size:12.5px}
+.did{padding:11px 15px;border-bottom:1px solid var(--rule-2)}
+.did li{font-size:13.5px;color:var(--ink-2);margin:0 0 4px;list-style:none;padding-left:16px;position:relative}
+.did li:last-child{margin-bottom:0}
+.did li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--ok)}
+.did ul{margin:0;padding:0}
+.ask{display:flex;gap:13px;align-items:flex-start;padding:13px 15px}
+.ask+.ask{border-top:1px solid var(--rule-2)}
+.ask .body{flex:1;min-width:0}
+.ask .t{font-size:14.5px;font-weight:600;margin:0 0 3px}
+.ask .d{font-size:13px;color:var(--ink-3);margin:0}
+.ask .btns{display:flex;gap:7px;flex:none;padding-top:2px}
+.btn-ok,.btn-no{
+  font:inherit;font-size:12.5px;font-weight:600;border-radius:3px;padding:5px 11px;cursor:pointer;border:1px solid transparent;
+}
+.btn-ok{background:var(--ink);color:var(--paper)}
+.btn-no{background:transparent;color:var(--ink-3);border-color:var(--rule)}
+.btn-no:hover{color:var(--ink)}
+.resolved{padding:13px 15px;font-size:13.5px;color:var(--ok);display:none}
+@media (max-width:560px){.ask{flex-wrap:wrap}.ask .btns{width:100%}}
+
+/* ---- timeline ---- */
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:62px 1fr;gap:14px;padding:9px 0;border-top:1px solid var(--rule-2);position:relative}
+.tl li:first-child{border-top:0}
+.tl .time{font-size:13px;color:var(--ink-3);font-variation-settings:"wdth" 88;padding-top:2px}
+.tl .what{border-left:3px solid var(--adm);padding-left:12px}
+.tl .what b{display:block;font-size:15px;font-weight:600}
+.tl .what small{color:var(--ink-3);font-size:12.5px}
+.tl li.now .time{color:var(--ink);font-weight:700}
+.tl li.now::before{
+  content:"";position:absolute;left:-20px;right:-8px;top:0;bottom:0;
+  background:color-mix(in srgb,var(--ink) 4%,transparent);border-radius:3px;
+}
+.tl li.now>*{position:relative}
+.tl .past{opacity:.42}
+
+/* ---- queue ---- */
+.tabs{display:flex;gap:2px;margin-bottom:13px;flex-wrap:wrap}
+.tabs button{
+  font:inherit;font-size:13px;font-weight:500;border:0;background:transparent;color:var(--ink-3);
+  padding:5px 10px;border-radius:3px;cursor:pointer;
+}
+.tabs button[aria-pressed="true"]{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink);font-weight:600}
+.q{list-style:none;margin:0;padding:0}
+.q li{
+  display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--rule-2);
+}
+.q li:first-child{border-top:0}
+.q input[type=checkbox]{
+  appearance:none;width:17px;height:17px;border:1.5px solid var(--ink-3);border-radius:3px;
+  margin:2px 0 0;cursor:pointer;flex:none;position:relative;background:transparent;
+}
+.q input:checked{background:var(--ink);border-color:var(--ink)}
+.q input:checked::after{
+  content:"";position:absolute;left:5px;top:1.5px;width:4px;height:9px;
+  border:solid var(--paper);border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.q input:focus-visible{outline:2px solid var(--strat);outline-offset:2px}
+.q .txt{flex:1;min-width:0}
+.q .txt b{font-weight:500;font-size:14.5px;display:block}
+.q .meta{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.q .tag{
+  font-size:11.5px;font-weight:700;padding:1px 6px;border-radius:2px;flex:none;margin-top:3px;
+  font-variation-settings:"wdth" 84;
+}
+.q li.done .txt{opacity:.38;text-decoration:line-through;text-decoration-thickness:1px}
+.q .due-hot{color:var(--alert);font-weight:600}
+.empty{font-size:13.5px;color:var(--ink-3);padding:16px 0}
+
+/* ---- rail ---- */
+.rail .box{border:1px solid var(--rule);border-radius:4px;background:var(--card);padding:15px}
+.rail .box+.box{margin-top:18px}
+.ev{display:block;padding:11px 0;border-top:1px solid var(--rule-2)}
+.ev:first-of-type{border-top:0;padding-top:2px}
+.ev b{display:block;font-size:14px;font-weight:600;line-height:1.3}
+.ev .m{font-size:12.5px;color:var(--ink-3);margin-top:3px}
+.ev .flag{font-size:11.5px;font-weight:700;color:var(--rec)}
+.ev .flag.late{color:var(--alert)}
+
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:44px 1fr 30px;align-items:center;gap:10px;font-size:12.5px}
+.bar .c{font-weight:700;font-variation-settings:"wdth" 84}
+.bar .track{height:6px;background:var(--rule-2);border-radius:99px;overflow:hidden}
+.bar .fill{height:100%;border-radius:99px}
+.bar .v{color:var(--ink-3);text-align:right}
+
+.src{display:flex;align-items:center;gap:9px;padding:7px 0;font-size:13px;border-top:1px solid var(--rule-2)}
+.src:first-of-type{border-top:0}
+.src .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.src .nm{font-weight:500}
+.src .st{margin-left:auto;color:var(--ink-3);font-size:12px;text-align:right}
+
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar">
+  <div class="mark">Chief of Staff <span>· RC Fall 2026</span></div>
+  <div class="sample">Sample data</div>
+  <div class="spacer"></div>
+  <div class="seg" role="group" aria-label="Range">
+    <button id="tToday" aria-pressed="true">Today</button>
+    <button id="tWeek" aria-pressed="false">Week</button>
+  </div>
+  <button class="ghost" id="theme">Dark</button>
+</div>
+
+<div class="hero">
+  <h1 class="date">Monday <em>21 Sep</em></h1>
+  <p class="nextline">
+    <span class="tick">in 24 min</span>
+    <span>FIN1 — Cold call risk: high, last spoke 3 sessions ago</span>
+    <span class="loc">Classroom · 10:50</span>
+  </p>
+  <div class="stats">
+    <div class="stat"><div class="n" id="sOpen">9</div><div class="l">Open tasks</div></div>
+    <div class="stat hot"><div class="n" id="sDue">3</div><div class="l">Due in 48 hours</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Registrations to confirm</div></div>
+    <div class="stat"><div class="n">6</div><div class="l">Days to application deadline</div></div>
+  </div>
+</div>
+
+<div class="grid">
+
+  <main>
+    <section class="agent">
+      <div class="agent-head">
+        <span class="pulse"></span> Agent run
+        <span class="when">Finished 6:04 am · next run 1:00 pm</span>
+      </div>
+      <div class="did">
+        <ul>
+          <li>Filed 4 Canvas wrap slides into your course running notes</li>
+          <li>Logged Friday's Class Log entries and updated the Takeaways Index</li>
+          <li>Scanned 12Twenty: 11 new events, 2 match your filters</li>
+          <li>Pulled tomorrow's FRC case PDF from the HBP coursepack link</li>
+        </ul>
+      </div>
+
+      <div class="ask" data-ask>
+        <div class="body">
+          <p class="t">Register you for Example Co. — Strategy coffee chat</p>
+          <p class="d">Tue 23 Sep, 5:00 pm · 12Twenty · 40 seats, 31 taken · no calendar conflict</p>
+        </div>
+        <div class="btns">
+          <button class="btn-ok" data-yes>Register me</button>
+          <button class="btn-no" data-no>Skip</button>
+        </div>
+      </div>
+
+      <div class="ask" data-ask>
+        <div class="body">
+          <p class="t">Send reply to Pat Example (alum) with three call windows</p>
+          <p class="d">Draft ready · offers Thu 4 pm, Fri 11 am, Mon 2 pm from your free blocks</p>
+        </div>
+        <div class="btns">
+          <button class="btn-ok" data-yes>Review draft</button>
+          <button class="btn-no" data-no>Skip</button>
+        </div>
+      </div>
+
+      <div class="resolved" data-resolved>Nothing waiting on you. Next run at 1:00 pm.</div>
+    </section>
+
+    <section>
+      <h2 class="sec">Today</h2>
+      <ul class="tl">
+        <li class="past"><div class="time">8:30</div><div class="what" style="border-color:var(--adm)"><b>Discussion Group</b><small>Classroom · FRC case walkthrough</small></div></li>
+        <li class="past"><div class="time">9:20</div><div class="what" style="border-color:var(--mkt)"><b>MKT</b><small>Prof. Example · spoke today ✓</small></div></li>
+        <li class="now"><div class="time">10:50</div><div class="what" style="border-color:var(--fin)"><b>FIN1</b><small>Classroom · prep doc ready · 3 sessions since you last spoke</small></div></li>
+        <li><div class="time">12:30</div><div class="what" style="border-color:var(--strat)"><b>Strat Lunch</b><small>BYO coffee chat with Prof. Example</small></div></li>
+        <li><div class="time">1:00</div><div class="what" style="border-color:var(--adm)"><b>Agent run</b><small>Canvas filing · Class Log · tomorrow's prep · 12Twenty scan</small></div></li>
+        <li><div class="time">5:00</div><div class="what" style="border-color:var(--rec)"><b>Club — industry panel</b><small>Campus · registered</small></div></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="sec">Queue <span class="count" id="qCount">9 open</span></h2>
+      <div class="tabs" role="group" aria-label="Filter">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="class" aria-pressed="false">Class</button>
+        <button data-f="rec" aria-pressed="false">Recruiting</button>
+        <button data-f="adm" aria-pressed="false">Admin</button>
+      </div>
+      <ul class="q" id="queue">
+        <li data-cat="class"><input type="checkbox"><div class="txt"><b>Read FRC case: Kansas City Zephyrs — questions 1A–1C</b><div class="meta"><span class="due-hot">Due tonight</span> · Canvas · prep doc drafted</div></div><span class="tag" style="color:var(--frc)">FRC</span></li>
+        <li data-cat="rec"><input type="checkbox"><div class="txt"><b>Submit Example Co. application</b><div class="meta"><span class="due-hot">6 days</span> · resume v3 attached · essay not started</div></div><span class="tag" style="color:var(--rec)">Recruiting</span></li>
+        <li data-cat="class"><input type="checkbox"><div class="txt"><b>TOM problem set 2 — capacity analysis</b><div class="meta"><span class="due-hot">Wed 8:00 am</span> · Canvas · 4 of 7 questions done</div></div><span class="tag" style="color:var(--tom)">TOM</span></li>
+        <li data-cat="rec"><input type="checkbox"><div class="txt"><b>Tailor resume for a second target function</b><div class="meta">This week · first version is done</div></div><span class="tag" style="color:var(--rec)">Recruiting</span></li>
+        <li data-cat="class"><input type="checkbox"><div class="txt"><b>LEAD reflection memo — 500 words</b><div class="meta">Thu 9:00 am · Canvas</div></div><span class="tag" style="color:var(--lead)">LEAD</span></li>
+        <li data-cat="rec"><input type="checkbox"><div class="txt"><b>Follow up with CPD advisor on recruiting narrative</b><div class="meta">Owed since Fri · they asked for your target list</div></div><span class="tag" style="color:var(--rec)">Recruiting</span></li>
+        <li data-cat="adm"><input type="checkbox"><div class="txt"><b>Section dinner — lock venue for group 3</b><div class="meta">Sat 26 Sep · 8 people confirmed</div></div><span class="tag" style="color:var(--adm)">Admin</span></li>
+        <li data-cat="class"><input type="checkbox"><div class="txt"><b>STRAT reading — industry analysis chapter</b><div class="meta">Tue 9:20 am · Canvas</div></div><span class="tag" style="color:var(--strat)">STRAT</span></li>
+        <li data-cat="adm"><input type="checkbox"><div class="txt"><b>Club — pay dues before Friday</b><div class="meta">From Outlook · $40</div></div><span class="tag" style="color:var(--adm)">Admin</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <aside class="rail">
+    <div class="box">
+      <h2 class="sec">Recruiting <span class="count">next 10 days</span></h2>
+      <div class="ev"><b>Example Co. — application closes</b><div class="m">Sun 27 Sep, 11:59 pm</div><div class="flag late">Essay not started</div></div>
+      <div class="ev"><b>Example Co. — Strategy coffee chat</b><div class="m">Tue 23 Sep, 5:00 pm · 12Twenty</div><div class="flag">Waiting on your approval</div></div>
+      <div class="ev"><b>Sample Corp — info session</b><div class="m">Thu 25 Sep, 6:00 pm · Campus</div><div class="flag">Registered</div></div>
+      <div class="ev"><b>Club — trek sign-ups open</b><div class="m">Fri 26 Sep, 9:00 am</div><div class="flag">Reminder set</div></div>
+    </div>
+
+    <div class="box">
+      <h2 class="sec">Participation <span class="count">goal: every 2–3</span></h2>
+      <div class="bars">
+        <div class="bar"><span class="c" style="color:var(--mkt)">MKT</span><span class="track"><span class="fill" style="width:78%;background:var(--mkt)"></span></span><span class="v">1 ago</span></div>
+        <div class="bar"><span class="c" style="color:var(--strat)">STRAT</span><span class="track"><span class="fill" style="width:60%;background:var(--strat)"></span></span><span class="v">2 ago</span></div>
+        <div class="bar"><span class="c" style="color:var(--frc)">FRC</span><span class="track"><span class="fill" style="width:72%;background:var(--frc)"></span></span><span class="v">1 ago</span></div>
+        <div class="bar"><span class="c" style="color:var(--tom)">TOM</span><span class="track"><span class="fill" style="width:40%;background:var(--tom)"></span></span><span class="v">3 ago</span></div>
+        <div class="bar"><span class="c" style="color:var(--lead)">LEAD</span><span class="track"><span class="fill" style="width:66%;background:var(--lead)"></span></span><span class="v">2 ago</span></div>
+        <div class="bar"><span class="c" style="color:var(--fin)">FIN1</span><span class="track"><span class="fill" style="width:24%;background:var(--fin)"></span></span><span class="v">3 ago</span></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2 class="sec">Sources</h2>
+      <div class="src"><span class="dot" style="background:var(--ok)"></span><span class="nm">Canvas</span><span class="st">API token · synced 6:04 am</span></div>
+      <div class="src"><span class="dot" style="background:var(--ok)"></span><span class="nm">Google Calendar</span><span class="st">API · live</span></div>
+      <div class="src"><span class="dot" style="background:var(--ok)"></span><span class="nm">Gmail + Outlook</span><span class="st">API · live</span></div>
+      <div class="src"><span class="dot" style="background:var(--warn)"></span><span class="nm">12Twenty</span><span class="st">Browser session · 6:01 am</span></div>
+      <div class="src"><span class="dot" style="background:var(--ink-3)"></span><span class="nm">LinkedIn</span><span class="st">Via email alerts only</span></div>
+    </div>
+  </aside>
+</div>
+
+<footer>Prototype with invented sample data — nothing here is pulled from your real accounts.</footer>
+</div>
+
+<script>
+(function(){
+  // theme
+  var tBtn=document.getElementById('theme');
+  var stored=null;
+  try{stored=localStorage.getItem('cos-theme')}catch(e){}
+  if(stored){document.documentElement.setAttribute('data-theme',stored);}
+  function label(){
+    var t=document.documentElement.getAttribute('data-theme');
+    var dark = t==='dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    tBtn.textContent = dark ? 'Light' : 'Dark';
+  }
+  label();
+  tBtn.addEventListener('click',function(){
+    var t=document.documentElement.getAttribute('data-theme');
+    var dark = t==='dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('cos-theme',next)}catch(e){}
+    label();
+  });
+
+  // queue
+  var queue=document.getElementById('queue');
+  var items=[].slice.call(queue.children);
+  var sOpen=document.getElementById('sOpen'), qCount=document.getElementById('qCount');
+  var filter='all';
+  function refresh(){
+    var open=0;
+    items.forEach(function(li){
+      var done=li.querySelector('input').checked;
+      li.classList.toggle('done',done);
+      if(!done) open++;
+      var show = (filter==='all' || li.dataset.cat===filter);
+      li.style.display = show ? '' : 'none';
+    });
+    sOpen.textContent=open;
+    qCount.textContent=open+' open';
+    var vis=items.filter(function(li){return li.style.display!=='none'});
+    var e=document.getElementById('noneMsg');
+    if(!vis.length){ if(!e){e=document.createElement('li');e.id='noneMsg';e.className='empty';e.textContent='Nothing in this category.';queue.appendChild(e);} }
+    else if(e){e.remove()}
+  }
+  queue.addEventListener('change',refresh);
+  [].slice.call(document.querySelectorAll('.tabs button')).forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.tabs button').forEach(function(x){x.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');
+      filter=b.dataset.f; refresh();
+    });
+  });
+  refresh();
+
+  // range toggle (visual only in prototype)
+  var tT=document.getElementById('tToday'), tW=document.getElementById('tWeek');
+  [[tT,tW],[tW,tT]].forEach(function(p){
+    p[0].addEventListener('click',function(){p[0].setAttribute('aria-pressed','true');p[1].setAttribute('aria-pressed','false')});
+  });
+
+  // agent approvals
+  function checkAsks(){
+    var left=document.querySelectorAll('[data-ask]').length;
+    if(!left){document.querySelector('[data-resolved]').style.display='block'}
+  }
+  document.querySelectorAll('[data-ask]').forEach(function(card){
+    card.addEventListener('click',function(ev){
+      var t=ev.target;
+      if(t.hasAttribute('data-yes')||t.hasAttribute('data-no')){
+        var msg = t.hasAttribute('data-yes') ? 'Done — agent is handling it.' : 'Skipped.';
+        card.innerHTML='<div class="body"><p class="d" style="color:var(--ok);margin:0">'+msg+'</p></div>';
+        card.removeAttribute('data-ask');
+        checkAsks();
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next
+.next/
+out/
+build/
+next-env.d.ts
+
+# secrets — nothing in here may ever reach the cloud
+.env
+.env.local
+.env*.local
+# ...and anything derived from it. `.env*.local` does NOT match `.env.local.bak`
+# or `.env.local.backup-*`; backups like these hold live tokens and are easy
+# to stage by accident with `git add -A`.
+.env.local.*
+*.bak
+*.backup-*
+worker/.credentials/
+worker/.sessions/
+*.pem
+
+# playwright browser session state
+playwright/.auth/
+
+# logs
+*.log
+npm-debug.log*
+worker/logs/
+
+# os
+.DS_Store
+Thumbs.db
+
+# onedrive sync artefacts
+*.tmp
+~$*
+
+tsconfig.tsbuildinfo
+
+
+# worker logs
+worker/logs/
+
+# scratch scripts used while debugging, never part of the app
+_*.mjs

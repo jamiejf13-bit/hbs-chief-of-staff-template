@@ -1,0 +1,53 @@
+{
+  "_comment": [
+    "Who this console belongs to. EDIT THIS FILE FIRST.",
+    "Read by the web app (titles, the agent's system prompt) and by the worker",
+    "(Canvas course mapping, Outlook/Gmail filters, outreach drafts), so",
+    "everything personal lives in one place. The values below are fake.",
+    "Your recruiting filter lives next door in lib/targets.json."
+  ],
+  "name": "Alex Example",
+  "firstName": "Alex",
+  "pronouns": "they/them",
+  "school": "HBS",
+  "program": "HBS MBA",
+  "classYear": 2028,
+  "year": "RC",
+  "section": "X",
+  "term": "RC Fall 2026",
+
+  "appName": "Chief of Staff",
+  "shortName": "CoS",
+
+  "timezone": "America/New_York",
+  "city": "Boston",
+  "awakeHours": { "start": 7, "end": 23 },
+
+  "emails": {
+    "school": "you@mba2028.hbs.edu",
+    "personal": "you@gmail.com"
+  },
+
+  "canvas": {
+    "baseUrl": "https://hbs.instructure.com"
+  },
+
+  "_courses_comment": "Your timetabled courses. `code` is what the UI shows and what calendar titles are matched on. `canvasCode` is the course_code Canvas reports for your section (look it up with `npm run canvas:check`); it defaults to CODE-SECTION. `leadDays` is how many days before class prep should start.",
+  "courses": [
+    { "code": "FIN1",  "name": "Finance I",                                  "leadDays": 2 },
+    { "code": "FRC",   "name": "Financial Reporting and Control",            "leadDays": 2 },
+    { "code": "LEAD",  "name": "Leadership and Organizational Behavior",     "leadDays": 1 },
+    { "code": "MKT",   "name": "Marketing",                                  "leadDays": 1 },
+    { "code": "STRAT", "name": "Strategy",                                   "leadDays": 1 },
+    { "code": "TOM",   "name": "Technology and Operations Management",      "leadDays": 1 }
+  ],
+
+  "_participation_comment": "Optional. An .xlsx you keep by hand with a 'Class Log' tab (Date, Course, Spoke, Notes). Leave path empty to turn participation tracking off, or set PARTICIPATION_XLSX in .env.local instead.",
+  "participation": {
+    "path": "",
+    "sheet": "Class Log"
+  },
+
+  "_outreach_comment": "How drafted outreach emails introduce you. Keep it to one clause.",
+  "outreachIntro": "an RC at HBS"
+}
